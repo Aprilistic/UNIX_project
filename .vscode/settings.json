@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "mytest.h": "c",
+        "stdlib.h": "c",
+        "wait.h": "c"
+    }
+}
