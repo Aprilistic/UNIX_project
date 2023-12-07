@@ -1,6 +1,6 @@
 #include "mytest.h"
 
-void client_oriented_io() {
+void clientOrientedIo() {
 
 	#ifdef TIMES
 		struct timeval stime, etime;

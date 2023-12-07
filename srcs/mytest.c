@@ -2,10 +2,10 @@
 
 int main() {
 
-	create_source_data(); // one-time execution
+	createSourceData(); // one-time execution
 
-	client_oriented_io();
-	server_oriented_io();
+	clientOrientedIo();
+	serverOrientedIo();
 	printf("Client_oriented_io time result\n");
 	printf("Server_oriented_io time result\n");
 

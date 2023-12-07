@@ -89,7 +89,7 @@ void toggleSockCO1(ipcSet *set, ipcState state) {
 void toggleSockCO2(ipcSet *set, ipcState state) {
     for (int from = 0; from < 4; from++) {
         for (int to = 0; to < 4; to++) {
-            if (from * 2 != to && from * 2 + 1 != to) continue;
+            if ((from * 2) % 4 != to && (from * 2 + 1) % 4 != to) continue;
             switch (state) {
             case IPC_ON:
                 openChannel(set, IPC_SOCK, DIR_MONO, from, to);

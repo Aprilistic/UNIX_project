@@ -32,9 +32,15 @@ typedef struct {
     int fd[4][4][2]; 
 } ipcSet;
 
-void create_source_data();
-void client_oriented_io();
-void server_oriented_io();
+void createSourceData();
+void clientOrientedIo();
+void serverOrientedIo();
+
+void loadData(int id, int* data);
+void saveData(ioType io, int id, int* data);
+
+void arrange(int *data, int start, int end);
+
 
 int getFd(ipcSet *set, int from, int to, fileMode mode);
 void toggleSockCO1(ipcSet *set, ipcState state);

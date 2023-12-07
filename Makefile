@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -DTIMES
 
-LIB_SRCS = srcs/client.c srcs/server.c srcs/ipc.c srcs/create.c srcs/co_scenario.c srcs/so_scenario.c
+LIB_SRCS = srcs/client.c srcs/server.c srcs/ipc.c srcs/file.c srcs/co_scenario.c srcs/so_scenario.c srcs/arrange.c
 MAIN_SRC = srcs/mytest.c
 
 SOURCE   = data/p0.dat data/p1.dat data/p2.dat data/p3.dat

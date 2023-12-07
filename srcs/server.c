@@ -1,5 +1,5 @@
 #include "mytest.h"
-void server_oriented_io() {
+void serverOrientedIo() {
 	#ifdef TIMES
         struct timeval stime,etime;
         long int time_result;
