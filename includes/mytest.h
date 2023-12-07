@@ -9,7 +9,6 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
-
 #ifndef TIMES
 #define TIMES
 #endif 
@@ -26,8 +25,6 @@ typedef enum {F_READ, F_WRITE} fileMode;
 typedef enum {DIR_MONO, DIR_BI} dirType;
 typedef enum {IPC_OFF, IPC_ON} ipcState;
 
-
-// chType과 ipcType에 따라 각각 생성
 typedef struct {
     int fd[4][4][2]; 
 } ipcSet;
@@ -40,7 +37,6 @@ void loadData(int id, int* data);
 void saveData(ioType io, int id, int* data);
 
 void arrange(int *data, int start, int end);
-
 
 int getFd(ipcSet *set, int from, int to, fileMode mode);
 void toggleSockCO1(ipcSet *set, ipcState state);

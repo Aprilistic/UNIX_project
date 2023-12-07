@@ -53,8 +53,8 @@ void closeChannel(ipcSet *set, ipcType ipc, dirType dir, int from, int to) {
         set->fd[from][to][0] = -1;
         set->fd[from][to][1] = -1;
         if (dir == DIR_BI) {
-            set->fd[to][from][0] = -1; // from에서 to로부터 읽는다.
-            set->fd[to][from][1] = -1; // from에서 to로 쓴다.
+            set->fd[to][from][0] = -1;
+            set->fd[to][from][1] = -1;
         }
         break;
     case IPC_PIPE:
