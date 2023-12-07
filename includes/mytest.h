@@ -14,7 +14,7 @@
 #define TIMES
 #endif 
 
-#define DATA_SIZE 1024 * 1024
+// #define DATA_SIZE 1024 * 1024
 #define INT_COUNT ((int)((DATA_SIZE) / (sizeof(int))))
 
 typedef enum {IO_CLIENT, IO_SERVER} ioType;

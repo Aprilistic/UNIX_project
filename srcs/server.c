@@ -16,7 +16,7 @@ void serverOrientedIo() {
 	#ifdef TIMES
         gettimeofday(&etime, NULL);
         time_result = etime.tv_usec - stime.tv_usec;
-        printf("Server_oriented_io TIMES == %ld %ld %ld\n", etime.tv_usec, stime.tv_usec, time_result);
+        printf("Server_oriented_io TIMES == %d %d %ld\n", etime.tv_usec, stime.tv_usec, time_result);
 	#endif
 
 }
