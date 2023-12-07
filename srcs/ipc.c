@@ -1,15 +1,16 @@
 #include "mytest.h"
 
-int getFd(ipcSet *set, chType ch, int from, int to, trfType trf) {
-    int fd = set->fd[from][to][trf];
+int getFd(ipcSet *set, int from, int to, fileMode mode) {
+    int fd = set->fd[from][to][mode];
     return fd;
 }
 
 // fd[a][b]에 대해, a가 쓰는 주체고 b가 읽는 주체이다.
 // 따라서 fd[a][b][0]의 경우, b가 a로부터 읽는 endpoint이다.
 // 반대로 fd[a][b][1]의 경우, a가 b에 쓰는 endpoint이다.
-int openChannel(ipcSet *set, ipcType ipc, dirType dir, int from, int to) {
+void openChannel(ipcSet *set, ipcType ipc, dirType dir, int from, int to) {
     int fd[2];
+    
     switch (ipc) {
     case IPC_SOCK:
         if (socketpair(AF_UNIX, SOCK_STREAM, 0, fd) == -1) {
@@ -39,9 +40,12 @@ int openChannel(ipcSet *set, ipcType ipc, dirType dir, int from, int to) {
         exit(EXIT_FAILURE);
         break;
     }
+
+    fcntl(fd[0], F_SETFL, fcntl(fd[0], F_GETFL) | O_NONBLOCK);
+    fcntl(fd[1], F_SETFL, fcntl(fd[1], F_GETFL) | O_NONBLOCK);
 }
 
-int closeChannel(ipcSet *set, ipcType ipc, dirType dir, int from, int to) {
+void closeChannel(ipcSet *set, ipcType ipc, dirType dir, int from, int to) {
     close(set->fd[from][to][0]);
     close(set->fd[from][to][1]);
     switch (ipc) {
@@ -65,7 +69,7 @@ int closeChannel(ipcSet *set, ipcType ipc, dirType dir, int from, int to) {
 }
 
 // 개수: 4P3 / 2(양방향) = 12
-void toggleSockC1(ipcSet *set, ipcState state) {
+void toggleSockCO1(ipcSet *set, ipcState state) {
     for (int from = 0; from < 4; from++) {
         for (int to = 0; to < 4; to++) {
             if (from >= to) continue;
@@ -82,7 +86,7 @@ void toggleSockC1(ipcSet *set, ipcState state) {
 }
 
 // 개수: 4 * 2 = 8
-void toggleSockC2(ipcSet *set, ipcState state) {
+void toggleSockCO2(ipcSet *set, ipcState state) {
     for (int from = 0; from < 4; from++) {
         for (int to = 0; to < 4; to++) {
             if (from * 2 != to && from * 2 + 1 != to) continue;
@@ -99,7 +103,7 @@ void toggleSockC2(ipcSet *set, ipcState state) {
 }
 
 // 개수: 4 * 4 = 16
-void togglePipeS1(ipcSet *set, ipcState state) {
+void togglePipeSO1(ipcSet *set, ipcState state) {
     for (int from = 0; from < 4; from++) {
         for (int to = 0; to < 4; to++) {
             switch (state) {

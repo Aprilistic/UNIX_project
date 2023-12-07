@@ -1,9 +1,8 @@
 #include "mytest.h"
-
-int server_oriented_io() {
+void server_oriented_io() {
 	#ifdef TIMES
         struct timeval stime,etime;
-        int time_result;
+        long int time_result;
 	#endif
 	/* Server_oriented_io. Measure IO time, communication time, and time for the rest.
         */
@@ -12,7 +11,7 @@ int server_oriented_io() {
         gettimeofday(&stime, NULL);
 	#endif
            
-        printf("**Program IO, communication, and the rest\n");
+        soRun();
 
 	#ifdef TIMES
         gettimeofday(&etime, NULL);

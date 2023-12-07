@@ -15,14 +15,14 @@
 #endif 
 
 #define DATA_SIZE 1024 * 1024
-#define INT_COUNT ((DATA_SIZE) / (sizeof(int)))
+#define INT_COUNT ((int)((DATA_SIZE) / (sizeof(int))))
 
 typedef enum {IO_CLIENT, IO_SERVER} ioType;
-typedef enum {CH_SHAK, CH_PASS} chType;
+typedef enum {CH_SHAKE, CH_PASS} chType;
 typedef enum {IPC_SOCK, IPC_PIPE} ipcType;
-typedef enum {TRF_SEND, TRF_RECV} trfType;
 typedef enum {P_CLIENT, P_SERVER} pType;
 
+typedef enum {F_READ, F_WRITE} fileMode;
 typedef enum {DIR_MONO, DIR_BI} dirType;
 typedef enum {IPC_OFF, IPC_ON} ipcState;
 
@@ -32,12 +32,14 @@ typedef struct {
     int fd[4][4][2]; 
 } ipcSet;
 
-int create_source_data();
-int client_oriented_io();
-int server_oriented_io();
+void create_source_data();
+void client_oriented_io();
+void server_oriented_io();
 
+int getFd(ipcSet *set, int from, int to, fileMode mode);
+void toggleSockCO1(ipcSet *set, ipcState state);
+void toggleSockCO2(ipcSet *set, ipcState state);
+void togglePipeSO1(ipcSet *set, ipcState state);
 
-int getFd(ipcSet *set, chType ch, int from, int to, trfType trf);
-void toggleSockC1(ipcSet *set, ipcState state);
-void toggleSockC2(ipcSet *set, ipcState state);
-void togglePipeS1(ipcSet *set, ipcState state);
+void coRun();
+void soRun();
