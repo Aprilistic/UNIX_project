@@ -1,7 +1,7 @@
 #include "mytest.h"
 
-const char *sourceFile[] = {"./data/p0.dat", "./data/p1.dat", "./data/p2.dat",
-                            "./data/p3.dat"};
+const char *sourceFile[] = {"./data/input0.dat", "./data/input1.dat", "./data/input2.dat",
+                            "./data/input3.dat"};
 
 void makeData(int id) {
 	int fd = open(sourceFile[id], O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -65,8 +65,21 @@ void loadData(int id, int* data) {
 	close(fd);	
 }
 
-void saveData(ioType io, int id, int* data) {
-	char saveFile[100] = "./data/IO_";
+void saveData(ioType io, nodeType node, int id, int* data) {
+	char saveFile[100] = "./data/";
+
+	switch (node) {
+	case NODE_COMPUTE:
+		strcat(saveFile, "CP_");
+		break;
+	case NODE_IO:
+		strcat(saveFile, "IO_");
+		break;
+	default:
+		printf("Invalid Node Type\n");
+		exit(EXIT_FAILURE);
+		break;
+	}
 
 	switch (io) {
 	case IO_CLIENT:

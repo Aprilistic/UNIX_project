@@ -17,6 +17,7 @@
 #define INT_COUNT ((int)((DATA_SIZE) / (sizeof(int))))
 
 typedef enum {IO_CLIENT, IO_SERVER} ioType;
+typedef enum {NODE_COMPUTE, NODE_IO} nodeType;
 typedef enum {CH_SHAKE, CH_PASS} chType;
 typedef enum {IPC_SOCK, IPC_PIPE} ipcType;
 typedef enum {P_CLIENT, P_SERVER} pType;
@@ -34,7 +35,7 @@ void clientOrientedIo();
 void serverOrientedIo();
 
 void loadData(int id, int* data);
-void saveData(ioType io, int id, int* data);
+void saveData(ioType io, nodeType node, int id, int* data);
 
 void arrange(int *data, int start, int end);
 

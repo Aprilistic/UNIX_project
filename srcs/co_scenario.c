@@ -135,6 +135,8 @@ void coClientScenario(ipcSet *set, int id) {
 
     arrange(data, 0, INT_COUNT - 1);
 
+    saveData(IO_CLIENT, NODE_COMPUTE, id, data);
+
     coClientDataProcess2(&set[1], id, data);
 }
 
@@ -143,7 +145,7 @@ void coServerScenario(ipcSet *set, int id) {
 
     coServerDataProcess1(&set[1], id, data);
 
-    saveData(IO_CLIENT, id, data);
+    saveData(IO_CLIENT, NODE_IO, id, data);
 }
 
 void coRun() {

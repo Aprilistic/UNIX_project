@@ -6,7 +6,7 @@ DATA_SIZE = "(1024 * 1024)"
 LIB_SRCS = srcs/client.c srcs/server.c srcs/ipc.c srcs/file.c srcs/co_scenario.c srcs/so_scenario.c srcs/arrange.c
 MAIN_SRC = srcs/mytest.c
 
-SOURCE   = data/p0.dat data/p1.dat data/p2.dat data/p3.dat
+SOURCE   = data/input0.dat data/input1.dat data/input2.dat data/input3.dat
 RESULT   = data/*
 
 LIB_OBJS = $(LIB_SRCS:.c=.o)

@@ -69,6 +69,8 @@ void soClientScenario(ipcSet *set, int id) {
 
     loadData(id, data);
 
+    saveData(IO_SERVER, NODE_COMPUTE, id, data);
+
 	soClientDataProcess1(set, id, data);
 }
 
@@ -79,7 +81,7 @@ void soServerScenario(ipcSet *set, int id) {
 
 	arrange(data, 0, INT_COUNT - 1);
 
-	saveData(IO_SERVER, id, data);
+	saveData(IO_SERVER, NODE_IO, id, data);
 }
 
 
