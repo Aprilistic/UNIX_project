@@ -65,23 +65,114 @@ void soServerDataProcess1(ipcSet *set, int id, int *data) {
 }
 
 void soClientScenario(ipcSet *set, int id) {
+
+#ifdef TIMES
+	struct timeval sCompTime, eCompTime, sCommTime, eCommTime;
+	struct timeval time_result;
+	long int elapsed_time;
+	gettimeofday(&sCompTime, NULL);
+#endif
+
     int data[INT_COUNT];
 
     loadData(id, data);
 
     saveData(IO_SERVER, NODE_COMPUTE, id, data);
 
+#ifdef TIMES
+	gettimeofday(&eCompTime, NULL);
+	time_result.tv_sec = eCompTime.tv_sec - sCompTime.tv_sec;
+	time_result.tv_usec = eCompTime.tv_usec - sCompTime.tv_usec;
+
+	// Handle case where end microseconds is less than start microseconds
+	if (eCompTime.tv_usec < sCompTime.tv_usec) {
+    	time_result.tv_sec--;
+    	time_result.tv_usec += 1000000;
+	}
+
+	// Convert total time to milliseconds
+	elapsed_time = time_result.tv_sec * 1000 + time_result.tv_usec / 1000;
+
+	printf("SO - Client %d Comp time: %ld ms\n", id, elapsed_time);
+#endif
+
+#ifdef TIMES
+	gettimeofday(&sCommTime, NULL);
+#endif
+
 	soClientDataProcess1(set, id, data);
+
+#ifdef TIMES
+	gettimeofday(&eCommTime, NULL);
+	time_result.tv_sec = eCommTime.tv_sec - sCommTime.tv_sec;
+	time_result.tv_usec = eCommTime.tv_usec - sCommTime.tv_usec;
+
+	// Handle case where end microseconds is less than start microseconds
+	if (eCommTime.tv_usec < sCommTime.tv_usec) {
+    	time_result.tv_sec--;
+    	time_result.tv_usec += 1000000;
+	}
+
+	// Convert total time to milliseconds
+	elapsed_time = time_result.tv_sec * 1000 + time_result.tv_usec / 1000;
+
+	printf("SO - Client %d Comm time: %ld ms\n", id, elapsed_time);
+#endif
 }
 
 void soServerScenario(ipcSet *set, int id) {
-	int data[INT_COUNT];
+#ifdef TIMES
+	struct timeval sCompTime, eCompTime, sCommTime, eCommTime;
+	struct timeval time_result;
+	long int elapsed_time;
+	gettimeofday(&sCompTime, NULL);
+#endif
+
+    int data[INT_COUNT];
 
 	soServerDataProcess1(set, id, data);
+
+#ifdef TIMES
+	gettimeofday(&eCompTime, NULL);
+	time_result.tv_sec = eCompTime.tv_sec - sCompTime.tv_sec;
+	time_result.tv_usec = eCompTime.tv_usec - sCompTime.tv_usec;
+
+	// Handle case where end microseconds is less than start microseconds
+	if (eCompTime.tv_usec < sCompTime.tv_usec) {
+    	time_result.tv_sec--;
+    	time_result.tv_usec += 1000000;
+	}
+
+	// Convert total time to milliseconds
+	elapsed_time = time_result.tv_sec * 1000 + time_result.tv_usec / 1000;
+
+	printf("SO - Server %d Comm time: %ld ms\n", id, elapsed_time);
+#endif
+
+#ifdef TIMES
+	gettimeofday(&sCommTime, NULL);
+#endif
 
 	arrange(data, 0, INT_COUNT - 1);
 
 	saveData(IO_SERVER, NODE_IO, id, data);
+
+#ifdef TIMES
+	gettimeofday(&eCommTime, NULL);
+	time_result.tv_sec = eCommTime.tv_sec - sCommTime.tv_sec;
+	time_result.tv_usec = eCommTime.tv_usec - sCommTime.tv_usec;
+
+	// Handle case where end microseconds is less than start microseconds
+	if (eCommTime.tv_usec < sCommTime.tv_usec) {
+    	time_result.tv_sec--;
+    	time_result.tv_usec += 1000000;
+	}
+
+	// Convert total time to milliseconds
+	elapsed_time = time_result.tv_sec * 1000 + time_result.tv_usec / 1000;
+
+	printf("SO - Server %d IO time: %ld ms\n", id, elapsed_time);
+#endif
 }
 
 

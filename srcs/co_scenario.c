@@ -127,6 +127,13 @@ void coServerDataProcess1(ipcSet *set, int id, int *data) {
 }
 
 void coClientScenario(ipcSet *set, int id) {
+#ifdef TIMES
+	struct timeval sCompTime, eCompTime, sCommTime, eCommTime;
+	struct timeval time_result;
+	long int elapsed_time;
+	gettimeofday(&sCompTime, NULL);
+#endif
+
     int data[INT_COUNT];
 
     loadData(id, data);
@@ -137,15 +144,98 @@ void coClientScenario(ipcSet *set, int id) {
 
     saveData(IO_CLIENT, NODE_COMPUTE, id, data);
 
+#ifdef TIMES
+	gettimeofday(&eCompTime, NULL);
+	time_result.tv_sec = eCompTime.tv_sec - sCompTime.tv_sec;
+	time_result.tv_usec = eCompTime.tv_usec - sCompTime.tv_usec;
+
+	// Handle case where end microseconds is less than start microseconds
+	if (eCompTime.tv_usec < sCompTime.tv_usec) {
+    	time_result.tv_sec--;
+    	time_result.tv_usec += 1000000;
+	}
+
+	// Convert total time to milliseconds
+	elapsed_time = time_result.tv_sec * 1000 + time_result.tv_usec / 1000;
+
+	printf("CO - Client %d Comp time: %ld ms\n", id, elapsed_time);
+#endif
+
+#ifdef TIMES
+	gettimeofday(&sCommTime, NULL);
+#endif
+
     coClientDataProcess2(&set[1], id, data);
+
+#ifdef TIMES
+	gettimeofday(&eCommTime, NULL);
+	time_result.tv_sec = eCommTime.tv_sec - sCommTime.tv_sec;
+	time_result.tv_usec = eCommTime.tv_usec - sCommTime.tv_usec;
+
+	// Handle case where end microseconds is less than start microseconds
+	if (eCommTime.tv_usec < sCommTime.tv_usec) {
+    	time_result.tv_sec--;
+    	time_result.tv_usec += 1000000;
+	}
+
+	// Convert total time to milliseconds
+	elapsed_time = time_result.tv_sec * 1000 + time_result.tv_usec / 1000;
+
+	printf("CO - Client %d Comm time: %ld ms\n", id, elapsed_time);
+#endif
 }
 
 void coServerScenario(ipcSet *set, int id) {
+#ifdef TIMES
+	struct timeval sCompTime, eCompTime, sCommTime, eCommTime;
+	struct timeval time_result;
+	long int elapsed_time;
+	gettimeofday(&sCompTime, NULL);
+#endif
+
     int data[INT_COUNT];
 
     coServerDataProcess1(&set[1], id, data);
 
+#ifdef TIMES
+	gettimeofday(&eCompTime, NULL);
+	time_result.tv_sec = eCompTime.tv_sec - sCompTime.tv_sec;
+	time_result.tv_usec = eCompTime.tv_usec - sCompTime.tv_usec;
+
+	// Handle case where end microseconds is less than start microseconds
+	if (eCompTime.tv_usec < sCompTime.tv_usec) {
+    	time_result.tv_sec--;
+    	time_result.tv_usec += 1000000;
+	}
+
+	// Convert total time to milliseconds
+	elapsed_time = time_result.tv_sec * 1000 + time_result.tv_usec / 1000;
+
+	printf("CO - Server %d Comm time: %ld ms\n", id, elapsed_time);
+#endif
+
+#ifdef TIMES
+	gettimeofday(&sCommTime, NULL);
+#endif
+
     saveData(IO_CLIENT, NODE_IO, id, data);
+
+#ifdef TIMES
+	gettimeofday(&eCommTime, NULL);
+	time_result.tv_sec = eCommTime.tv_sec - sCommTime.tv_sec;
+	time_result.tv_usec = eCommTime.tv_usec - sCommTime.tv_usec;
+
+	// Handle case where end microseconds is less than start microseconds
+	if (eCommTime.tv_usec < sCommTime.tv_usec) {
+    	time_result.tv_sec--;
+    	time_result.tv_usec += 1000000;
+	}
+
+	// Convert total time to milliseconds
+	elapsed_time = time_result.tv_sec * 1000 + time_result.tv_usec / 1000;
+
+	printf("CO - Server %d IO time: %ld ms\n", id, elapsed_time);
+#endif
 }
 
 void coRun() {
