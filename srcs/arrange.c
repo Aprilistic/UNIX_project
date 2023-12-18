@@ -25,3 +25,15 @@ void arrange(int *data, int start, int end) {
     if (start < right) arrange(data, start, right);
     if (left < end) arrange(data, left, end);
 }
+
+void sortData(int data[]) {
+
+	int buf[INT_COUNT];
+
+    for (int i = 0; i < INT_COUNT; i += 1024) {
+        int bufIndex = (i / 1024) % 4 * (INT_COUNT / 4);
+        memcpy(&buf[bufIndex], &data[i], 1024 * sizeof(int));
+    }
+
+	memcpy(data, buf, DATA_SIZE);
+}

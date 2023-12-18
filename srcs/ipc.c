@@ -117,3 +117,18 @@ void togglePipeSO1(ipcSet *set, ipcState state) {
         }
     }
 }
+
+void toggleSockCO3(ipcSet *set, ipcState state) {
+    for (int from = 0; from < 4; from++) {
+        for (int to = 0; to < 4; to++) {
+            switch (state) {
+            case IPC_ON:
+                openChannel(set, IPC_SOCK, DIR_MONO, from, to);
+                break;
+            default:
+                closeChannel(set, IPC_SOCK, DIR_MONO, from, to);
+                break;
+            }
+        }
+    }    
+}

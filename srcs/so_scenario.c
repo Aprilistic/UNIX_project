@@ -8,13 +8,16 @@ void soClientDataProcess1(ipcSet *set, int id, int *data) {
 		fdWrite[i] = getFd(set, id, i, F_WRITE);
 	}
 
-    size_t bytesStream[8] = { 0, };
 
-    int writing = (1 << 8) - 1;
+    sortData(data);
+
+    size_t bytesStream[4] = { 0, };
+
+    int writing = (1 << 4) - 1;
 
     while (writing) {
-        for (int i = 0; i < 8; i++) {
-            ssize_t bytesWrite = write(fdWrite[i % 4], (char *)data + DATA_SIZE / 8 * i + bytesStream[i], DATA_SIZE / 8 - bytesStream[i]);
+        for (int i = 0; i < 4; i++) {
+            ssize_t bytesWrite = write(fdWrite[i % 4], (char *)data + DATA_SIZE / 4 * i + bytesStream[i], DATA_SIZE / 4 - bytesStream[i]);
             if (bytesWrite == -1) {
                 if (errno == EAGAIN || errno == EWOULDBLOCK) {
                     bytesWrite = 0;

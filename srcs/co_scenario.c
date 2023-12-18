@@ -10,7 +10,7 @@ void coClientDataProcess1(ipcSet *set, int id, int *data) {
 
     int buf[INT_COUNT];
 
-    for (int i = 0; i < INT_COUNT / 4; i++) {
+    for (int i = 0; i < INT_COUNT / 1024; i++) {
         buf[i + INT_COUNT / 4 * id] = data[i + INT_COUNT / 4 * id];
     }
 
@@ -68,17 +68,21 @@ void coClientDataProcess1(ipcSet *set, int id, int *data) {
 
 // client에서 2개의 server로 데이터 전송
 void coClientDataProcess2(ipcSet *set, int id, int *data) {
-    int fdWrite[2];
-    fdWrite[0] = getFd(set, id, (id * 2) % 4, F_WRITE);
-    fdWrite[1] = getFd(set, id, (id * 2 + 1) % 4, F_WRITE);
+    int fdWrite[4];
+    
+	for (int i = 0; i < 4; i++) {
+		fdWrite[i] = getFd(set, id, i, F_WRITE);
+	}
 
-    size_t bytesStream[2] = { 0, };
+    sortData(data);
 
-    int writing = (1 << 2) - 1;
+    size_t bytesStream[4] = { 0, };
+
+    int writing = (1 << 4) - 1;
 
     while (writing) {
-        for (int i = 0; i < 2; i++) {
-            ssize_t bytesWrite = write(fdWrite[i], (char *)data + DATA_SIZE / 2 * i + bytesStream[i], DATA_SIZE / 2 - bytesStream[i]);
+        for (int i = 0; i < 4; i++) {
+            ssize_t bytesWrite = write(fdWrite[i % 4], (char *)data + DATA_SIZE / 4 * i + bytesStream[i], DATA_SIZE / 4 - bytesStream[i]);
             if (bytesWrite == -1) {
                 if (errno == EAGAIN || errno == EWOULDBLOCK) {
                     bytesWrite = 0;
@@ -89,7 +93,7 @@ void coClientDataProcess2(ipcSet *set, int id, int *data) {
                 }                
             }
             bytesStream[i] += (size_t)bytesWrite;
-            if ((int)bytesStream[i] == DATA_SIZE / 2) {
+            if ((int)bytesStream[i] == DATA_SIZE / 8) {
                 writing &= ~(1 << i);
             }
         }
@@ -98,17 +102,19 @@ void coClientDataProcess2(ipcSet *set, int id, int *data) {
 
 // server에서 2개의 client로부터 데이터 수신
 void coServerDataProcess1(ipcSet *set, int id, int *data) {
-    int fdRead[2];
-    fdRead[0] = getFd(set, (id < 2 ? 0 : 1), id, F_READ);
-    fdRead[1] = getFd(set, (id < 2 ? 2 : 3), id, F_READ);
+    int fdRead[4];
 
-    size_t bytesStream[2] = { 0, };
+	for (int i = 0; i < 4; i++) {
+		fdRead[i] = getFd(set, i, id, F_READ);
+	}
 
-    int reading = (1 << 2) - 1;
+    size_t bytesStream[4] = { 0, };
+
+    int reading = (1 << 4) - 1;
 
     while (reading) {
-        for (int i = 0; i < 2; i++) {
-            ssize_t bytesRead = read(fdRead[i], (char *)data + DATA_SIZE / 2 * i + bytesStream[i], DATA_SIZE / 2 - bytesStream[i]);
+        for (int i = 0; i < 4; i++) {
+            ssize_t bytesRead = read(fdRead[i], (char *)data + DATA_SIZE / 4 * i + bytesStream[i], DATA_SIZE / 4 - bytesStream[i]);
             if (bytesRead == -1) {
                 if (errno == EAGAIN || errno == EWOULDBLOCK) {
                     bytesRead = 0;
@@ -119,7 +125,7 @@ void coServerDataProcess1(ipcSet *set, int id, int *data) {
                 }                
             }
             bytesStream[i] += (size_t)bytesRead;
-            if ((int)bytesStream[i] == DATA_SIZE / 2) {
+            if ((int)bytesStream[i] == DATA_SIZE / 4) {
                 reading &= ~(1 << i);
             }
         }
@@ -242,7 +248,7 @@ void coRun() {
 	ipcSet setCO[2];
 
 	toggleSockCO1(&setCO[0], IPC_ON);
-	toggleSockCO2(&setCO[1], IPC_ON);
+	toggleSockCO3(&setCO[1], IPC_ON);
 
 	pid_t client[4], server[4], pid;
 
@@ -256,7 +262,7 @@ void coRun() {
 		case 0:
 			coClientScenario(setCO, i);
 			toggleSockCO1(&setCO[0], IPC_OFF);
-			toggleSockCO2(&setCO[1], IPC_OFF);
+			toggleSockCO3(&setCO[1], IPC_OFF);
 			exit(EXIT_SUCCESS);
 			break;
 		default:
@@ -275,7 +281,7 @@ void coRun() {
 		case 0:
 			coServerScenario(setCO, i);
 			toggleSockCO1(&setCO[0], IPC_OFF);
-			toggleSockCO2(&setCO[1], IPC_OFF);
+			toggleSockCO3(&setCO[1], IPC_OFF);
 			exit(EXIT_SUCCESS);
 			break;
 		default:
@@ -285,7 +291,7 @@ void coRun() {
 	}
 
 	toggleSockCO1(&setCO[0], IPC_OFF);
-	toggleSockCO2(&setCO[1], IPC_OFF);
+	toggleSockCO3(&setCO[1], IPC_OFF);
 
 	for (int i = 0; i < 4; i++) {
 		waitpid(client[i], NULL, 0);

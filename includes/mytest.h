@@ -38,10 +38,12 @@ void loadData(int id, int* data);
 void saveData(ioType io, nodeType node, int id, int* data);
 
 void arrange(int *data, int start, int end);
+void sortData(int data[]);
 
 int getFd(ipcSet *set, int from, int to, fileMode mode);
 void toggleSockCO1(ipcSet *set, ipcState state);
 void toggleSockCO2(ipcSet *set, ipcState state);
+void toggleSockCO3(ipcSet *set, ipcState state);
 void togglePipeSO1(ipcSet *set, ipcState state);
 
 void coRun();
