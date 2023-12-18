@@ -7,7 +7,7 @@ LIB_SRCS = srcs/client.c srcs/server.c srcs/ipc.c srcs/file.c srcs/co_scenario.c
 MAIN_SRC = srcs/mytest.c
 
 SOURCE   = data/input0.dat data/input1.dat data/input2.dat data/input3.dat
-RESULT   = data/*
+RESULT   = data/* res/*
 
 LIB_OBJS = $(LIB_SRCS:.c=.o)
 MAIN_OBJ = $(MAIN_SRC:.c=.o)
