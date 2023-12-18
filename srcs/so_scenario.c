@@ -9,7 +9,7 @@ void soClientDataProcess1(ipcSet *set, int id, int *data) {
 	}
 
 
-    sortData(data);
+    sortData(data, 256);
 
     size_t bytesStream[4] = { 0, };
 

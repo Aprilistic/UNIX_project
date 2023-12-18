@@ -74,7 +74,7 @@ void coClientDataProcess2(ipcSet *set, int id, int *data) {
 		fdWrite[i] = getFd(set, id, i, F_WRITE);
 	}
 
-    sortData(data);
+    sortData(data, 1024);
 
     size_t bytesStream[4] = { 0, };
 

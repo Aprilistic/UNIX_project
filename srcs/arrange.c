@@ -26,13 +26,13 @@ void arrange(int *data, int start, int end) {
     if (left < end) arrange(data, left, end);
 }
 
-void sortData(int data[]) {
+void sortData(int data[], int unit) {
 
 	int buf[INT_COUNT];
 
-    for (int i = 0; i < INT_COUNT; i += 1024) {
-        int bufIndex = (i / 1024) % 4 * (INT_COUNT / 4);
-        memcpy(&buf[bufIndex], &data[i], 1024 * sizeof(int));
+    for (int i = 0; i < INT_COUNT; i += unit) {
+        int bufIndex = (i / unit) % 4 * (INT_COUNT / 4);
+        memcpy(&buf[bufIndex], &data[i], unit * sizeof(int));
     }
 
 	memcpy(data, buf, DATA_SIZE);
